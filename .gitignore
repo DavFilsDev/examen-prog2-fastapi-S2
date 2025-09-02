@@ -1,0 +1,9 @@
+# Ignorer les caches Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Venv local
+venv/
+.env/
