@@ -35,3 +35,11 @@ def get_phone(id: str):
             return phone.model_dump()
     raise HTTPException(status_code=404, detail=f"Phone with id '{id}' not found")
 
+@app.put("/phones/{id}/characteristics")
+def update_characteristics(id: str, new_characteristics: Characteristic):
+    for i, phone in enumerate(phones_store):
+        if phone.identifier == id:
+            updated_phone = phone.copy(update={"characteristics": new_characteristics})
+            phones_store[i] = updated_phone
+            return updated_phone.model_dump()
+    raise HTTPException(status_code=404, detail=f"Phone with id '{id}' not found")
