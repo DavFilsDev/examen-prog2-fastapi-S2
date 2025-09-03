@@ -34,3 +34,4 @@ def get_phone(id: str):
         if phone.identifier == id:
             return phone.model_dump()
     raise HTTPException(status_code=404, detail=f"Phone with id '{id}' not found")
+

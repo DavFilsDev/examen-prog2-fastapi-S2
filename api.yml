@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  title: STD24190
+  version: 1.0.0
+  description: "This is a specification of STD24190"
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Returns Ok
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Ok
+
+  /phones:
+    post:
+      summary: Create a list of phones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Phone"
+      responses:
+        "201":
+          description: List of created phones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Phone"
+    get:
+      summary: Get all phones
+      responses:
+        "200":
+          description: List of phones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Phone"
+
+  /phones/{id}:
+    get:
+      summary: Get a phone by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A single phone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Phone"
+        "404":
+          description: Phone not found
+
+  /phones/{id}/characteristics:
+    put:
+      summary: Update phone characteristics
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Characteristic"
+      responses:
+        "200":
+          description: Phone with updated characteristics
+          content:
+            application/json:
+              schema:
+                allOf:    # BONUS: héritage
+                  - $ref: "#/components/schemas/Phone"
+                  - type: object
+                    properties:
+                      characteristics:
+                        $ref: "#/components/schemas/Characteristic"
+        "404":
+          description: Phone not found
+
+components:
+  schemas:
+    Characteristic:
+      type: object
+      properties:
+        ram_memory:
+          type: integer
+          example: 8
+        rom_memory:
+          type: integer
+          example: 128
+      required:
+        - ram_memory
+        - rom_memory
+
+    Phone:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: "ph123"
+        brand:
+          type: string
+          example: "Samsung"
+        model:
+          type: string
+          example: "Galaxy S23"
+        characteristics:
+          $ref: "#/components/schemas/Characteristic"
+      required:
+        - identifier
+        - brand
+        - model
+        - characteristics
